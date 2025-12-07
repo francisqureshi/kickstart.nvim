@@ -1,5 +1,5 @@
 --[[
-
+fq
 =====================================================================
 ==================== READ THIS BEFORE CONTINUING ====================
 =====================================================================
@@ -242,17 +242,17 @@ map('n', '<leader>tt', function()
 
   if #term_bufs > 0 then
     vim.cmd('buffer ' .. term_bufs[#term_bufs])
-    vim.cmd('startinsert')
+    vim.cmd 'startinsert'
   end
 end, { desc = 'Jump to last terminal buffer' })
 
 -- Zig debug print variable
 map('n', '<leader>pf', function()
   -- Get the word under cursor
-  local word = vim.fn.expand('<cword>')
+  local word = vim.fn.expand '<cword>'
 
   -- Get current line number
-  local line = vim.fn.line('.')
+  local line = vim.fn.line '.'
 
   -- Get current indentation
   local indent = vim.fn.indent(line)
@@ -266,7 +266,7 @@ map('n', '<leader>pf', function()
 
   -- Move cursor to the inserted line, at the position after the opening quote
   vim.fn.cursor(line + 1, indent + 19 + #word)
-  vim.cmd('startinsert')
+  vim.cmd 'startinsert'
 end, { desc = 'Zig debug print variable' })
 
 -- [[ Basic Autocommands ]]
@@ -657,10 +657,10 @@ require('lazy').setup({
           -- Follow file:// links in LSP hover popup
           vim.keymap.set('n', 'gx', function()
             local line = vim.api.nvim_get_current_line()
-            local url = line:match('file://([^)]+)')
+            local url = line:match 'file://([^)]+)'
             if url then
-              local file = url:match('([^#]+)')
-              local lnum = url:match('#L(%d+)')
+              local file = url:match '([^#]+)'
+              local lnum = url:match '#L(%d+)'
               if file then
                 vim.cmd('edit ' .. vim.fn.fnameescape(file))
                 if lnum then
@@ -669,7 +669,7 @@ require('lazy').setup({
               end
             else
               -- Fallback to default gx behavior
-              vim.ui.open(vim.fn.expand('<cfile>'))
+              vim.ui.open(vim.fn.expand '<cfile>')
             end
           end, { buffer = event.buf, desc = 'LSP: Open file:// link' })
 
@@ -798,7 +798,7 @@ require('lazy').setup({
         zls = {
           cmd = { 'zls' },
           settings = {
-            zig_exe_path = vim.fn.expand('~/.zvm/bin/zig'),
+            zig_exe_path = vim.fn.expand '~/.zvm/bin/zig',
           },
         },
         pyright = {
@@ -1193,7 +1193,6 @@ require('lazy').setup({
   -- Or use telescope!
   -- In normal mode type `<space>sh` then write `lazy.nvim-plugin`
   -- you can continue same window with `<space>sr` which resumes last telescope search
-
 }, {
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the
