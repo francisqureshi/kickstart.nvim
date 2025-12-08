@@ -286,6 +286,14 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 -- Make indent guides match comment color
 vim.api.nvim_set_hl(0, 'BlinkIndent', { fg = '#2a2f36' }) -- RGB 42, 47, 54 (lighter than before)
 
+-- Associate .metal files with metal filetype (use cpp parser for highlighting)
+vim.filetype.add {
+  extension = {
+    metal = 'metal',
+  },
+}
+vim.treesitter.language.register('cpp', 'metal')
+
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
@@ -792,7 +800,9 @@ require('lazy').setup({
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
-        -- clangd = {},
+        clangd = {
+          filetypes = { 'c', 'cpp', 'objc', 'objcpp', 'cuda', 'proto' }, -- Exclude metal
+        },
         -- gopls = {},
         jsonls = {},
         zls = {
@@ -939,6 +949,7 @@ require('lazy').setup({
       formatters_by_ft = {
         lua = { 'stylua' },
         json = { 'prettier' },
+        metal = { 'clang_format' },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --
@@ -1147,7 +1158,7 @@ require('lazy').setup({
     main = 'nvim-treesitter.configs', -- Sets main module to use for opts
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
     opts = {
-      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'python', 'query', 'vim', 'vimdoc' },
+      ensure_installed = { 'bash', 'c', 'cpp', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'python', 'query', 'vim', 'vimdoc' },
       -- Autoinstall languages that are not installed
       auto_install = true,
       highlight = {
