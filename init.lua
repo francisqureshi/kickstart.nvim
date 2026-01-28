@@ -199,7 +199,7 @@ vim.keymap.set('n', '<C-h>', '<C-w><C-h>', { desc = 'Move focus to the left wind
 vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
 vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
-
+--
 -- NOTE: Some terminals have colliding keymaps or are not able to send distinct keycodes
 -- vim.keymap.set("n", "<C-S-h>", "<C-w>H", { desc = "Move window to the left" })
 -- vim.keymap.set("n", "<C-S-l>", "<C-w>L", { desc = "Move window to the right" })
@@ -1032,7 +1032,7 @@ require('lazy').setup({
       completion = {
         -- By default, you may press `<c-space>` to show the documentation.
         -- Optionally, set `auto_show = true` to show the documentation after a delay.
-        documentation = { auto_show = false, auto_show_delay_ms = 500 },
+        documentation = { auto_show = true, auto_show_delay_ms = 500 },
       },
 
       sources = {
@@ -1101,6 +1101,10 @@ require('lazy').setup({
         background = { -- map the value of 'background' option to a theme
           dark = 'zen', -- try "ink" or "zen"!
           light = 'pearl',
+        },
+        foreground = {
+          dark = 'default', -- Use default colors in dark mode
+          light = 'saturated', -- Use higher saturation in light mode
         },
       }
 
@@ -1268,7 +1272,7 @@ require('claude-code').setup {
         verbose = '<leader>cV', -- Normal mode keymap for Claude Code with verbose flag
       },
     },
-    window_navigation = true, -- Enable window navigation keymaps (<C-h/j/k/l>)
+    window_navigation = false,
     scrolling = true, -- Enable scrolling keymaps (<C-f/b>) for page up/down
   },
 }
