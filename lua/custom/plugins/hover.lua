@@ -46,10 +46,10 @@ return {
     end, { desc = 'hover.nvim (next source)' })
 
     -- Mouse support
-    vim.keymap.set('n', '<MouseMove>', function()
-      require('hover').mouse()
-    end, { desc = 'hover.nvim (mouse)' })
-
-    vim.o.mousemoveevent = true
+    -- vim.keymap.set('n', '<MouseMove>', function()
+    --   require('hover').mouse()
+    -- end, { desc = 'hover.nvim (mouse)' })
+    --
+    -- vim.o.mousemoveevent = true
   end,
 }
