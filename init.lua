@@ -294,13 +294,12 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 -- Make indent guides match comment color
 vim.api.nvim_set_hl(0, 'BlinkIndent', { fg = '#2a2f36' }) -- RGB 42, 47, 54 (lighter than before)
 
--- Associate .metal files with metal filetype (use cpp parser for highlighting)
+-- Associate .metal files with metal filetype
 vim.filetype.add {
   extension = {
     metal = 'metal',
   },
 }
-vim.treesitter.language.register('cpp', 'metal')
 
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
@@ -833,6 +832,11 @@ require('lazy').setup({
             },
           },
         },
+        metal_lsp = {
+          cmd = { vim.fn.expand '~/.local/bin/metal-lsp' },
+          filetypes = { 'metal' },
+          root_markers = { '.git', 'Package.swift' },
+        },
         sourcekit = {
           capabilities = {
             workspace = {
@@ -883,7 +887,7 @@ require('lazy').setup({
       -- for you, so that they are available from within Neovim.
       -- Filter out servers that aren't available through Mason
       local mason_servers = vim.tbl_filter(function(server_name)
-        return server_name ~= 'sourcekit' and server_name ~= 'zls' -- sourcekit-lsp comes with Xcode, zls using custom version
+        return server_name ~= 'sourcekit' and server_name ~= 'zls' and server_name ~= 'metal_lsp' -- sourcekit-lsp comes with Xcode, zls using custom version, metal_lsp built from source
       end, vim.tbl_keys(servers or {}))
 
       local ensure_installed = mason_servers
@@ -912,7 +916,7 @@ require('lazy').setup({
       }
 
       -- Setup LSP servers that aren't managed by Mason
-      local non_mason_servers = { 'sourcekit', 'zls' }
+      local non_mason_servers = { 'sourcekit', 'zls', 'metal_lsp' }
       for _, server_name in ipairs(non_mason_servers) do
         local server = servers[server_name] or {}
         server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
@@ -1182,6 +1186,11 @@ require('lazy').setup({
       },
       indent = { enable = true, disable = { 'ruby' } },
     },
+    config = function(_, opts)
+      require('nvim-treesitter.configs').setup(opts)
+      -- Register cpp parser for metal files (must happen after treesitter loads)
+      vim.treesitter.language.register('cpp', 'metal')
+    end,
     -- There are additional nvim-treesitter modules that you can use to interact
     -- with nvim-treesitter. You should go explore a few and see what interests you:
     --
