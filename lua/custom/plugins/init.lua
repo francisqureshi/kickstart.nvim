@@ -4,13 +4,4 @@
 -- See the kickstart.nvim README for more information
 
 return {
-  {
-    'esmuellert/vscode-diff.nvim',
-    dependencies = {
-      'MunifTanjim/nui.nvim',
-    },
-    config = function()
-      require('vscode-diff').setup()
-    end,
-  },
 }
