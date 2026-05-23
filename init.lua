@@ -286,7 +286,9 @@ end, { desc = 'Zig debug print variable' })
 vim.api.nvim_create_autocmd('TextYankPost', {
   desc = 'Highlight when yanking (copying) text',
   group = vim.api.nvim_create_augroup('kickstart-highlight-yank', { clear = true }),
-  callback = function() vim.hl.on_yank() end,
+  callback = function()
+    vim.hl.on_yank()
+  end,
 })
 
 -- Make indent guides match comment color
@@ -817,7 +819,7 @@ require('lazy').setup({
         zls = {
           cmd = { 'zls' },
           settings = {
-            zig_exe_path = vim.fn.expand '~/.zvm/bin/zig',
+            zig_exe_path = '/etc/profiles/per-user/fq/bin/zig',
           },
         },
         pyright = {
@@ -894,9 +896,9 @@ require('lazy').setup({
 
       local ensure_installed = mason_servers
       vim.list_extend(ensure_installed, {
-        'stylua',  -- Used to format Lua code
+        'stylua', -- Used to format Lua code
         'pyright', -- Python LSP server
-        'taplo',   -- TOML formatter
+        'taplo', -- TOML formatter
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -1128,7 +1130,21 @@ require('lazy').setup({
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
       -- vim.cmd.colorscheme 'tokyonight-night'
-      vim.cmd.colorscheme 'kanso-zen'
+      --
+      -- `kanso` (no suffix) reads &background and picks the variant from the
+      -- background map above (dark → zen, light → pearl). Modern terminals
+      -- (Ghostty/iTerm2/WezTerm/kitty) — including over SSH — set &background
+      -- via OSC 11 on startup and via DEC mode 2031 on mid-session theme flips,
+      -- so this colorscheme will follow macOS light/dark automatically.
+      vim.cmd.colorscheme 'kanso'
+
+      -- Re-apply the colorscheme when &background changes so the kanso variant
+      -- swaps (zen↔pearl) instead of just inverting the existing palette.
+      vim.api.nvim_create_autocmd('OptionSet', {
+        pattern = 'background',
+        callback = function() vim.cmd.colorscheme 'kanso' end,
+        desc = 'Reload kanso colorscheme when terminal flips light/dark',
+      })
     end,
   },
 
@@ -1192,10 +1208,14 @@ require('lazy').setup({
       ---@param buf integer
       ---@param language string
       local function treesitter_try_attach(buf, language)
-        if not vim.treesitter.language.add(language) then return end
+        if not vim.treesitter.language.add(language) then
+          return
+        end
         vim.treesitter.start(buf, language)
         local has_indent_query = vim.treesitter.query.get(language, 'indents') ~= nil
-        if has_indent_query then vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()" end
+        if has_indent_query then
+          vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+        end
       end
 
       local available_parsers = require('nvim-treesitter').get_available()
@@ -1203,12 +1223,16 @@ require('lazy').setup({
         callback = function(args)
           local buf, filetype = args.buf, args.match
           local language = vim.treesitter.language.get_lang(filetype)
-          if not language then return end
+          if not language then
+            return
+          end
           local installed_parsers = require('nvim-treesitter').get_installed 'parsers'
           if vim.tbl_contains(installed_parsers, language) then
             treesitter_try_attach(buf, language)
           elseif vim.tbl_contains(available_parsers, language) then
-            require('nvim-treesitter').install(language):await(function() treesitter_try_attach(buf, language) end)
+            require('nvim-treesitter').install(language):await(function()
+              treesitter_try_attach(buf, language)
+            end)
           else
             treesitter_try_attach(buf, language)
           end
