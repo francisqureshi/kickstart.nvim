@@ -353,7 +353,48 @@ require('lazy').setup({
       'nvim-lua/plenary.nvim', -- Required for git operations
     },
     config = function()
-      require('claude-code').setup()
+      require('claude-code').setup {
+        -- Terminal window settings
+        window = {
+          split_ratio = 0.3, -- Percentage of screen for the terminal window (height for horizontal, width for vertical splits)
+          position = 'vertical', -- Position of the window: "botright", "topleft", "vertical", "rightbelow vsplit", etc.
+          enter_insert = true, -- Whether to enter insert mode when opening Claude Code
+          hide_numbers = true, -- Hide line numbers in the terminal window
+          hide_signcolumn = true, -- Hide the sign column in the terminal window
+        },
+        -- File refresh settings
+        refresh = {
+          enable = true, -- Enable file change detection
+          updatetime = 100, -- updatetime when Claude Code is active (milliseconds)
+          timer_interval = 1000, -- How often to check for file changes (milliseconds)
+          show_notifications = true, -- Show notification when files are reloaded
+        },
+        -- Git project settings
+        git = {
+          use_git_root = true, -- Set CWD to git root when opening Claude Code (if in git project)
+        },
+        -- Command settings
+        command = 'claude', -- Command used to launch Claude Code
+        -- Command variants
+        command_variants = {
+          continue = '--continue', -- Resume the most recent conversation
+          resume = '--resume', -- Display an interactive conversation picker
+          verbose = '--verbose', -- Enable verbose logging with full turn-by-turn output
+        },
+        -- Keymaps
+        keymaps = {
+          toggle = {
+            normal = '<C-,>', -- Normal mode keymap for toggling Claude Code, false to disable
+            terminal = '<C-,>', -- Terminal mode keymap for toggling Claude Code, false to disable
+            variants = {
+              continue = '<leader>cC', -- Normal mode keymap for Claude Code with continue flag
+              verbose = '<leader>cV', -- Normal mode keymap for Claude Code with verbose flag
+            },
+          },
+          window_navigation = true, -- Enable window navigation keymaps (<C-h/j/k/l>)
+          scrolling = true, -- Enable scrolling keymaps (<C-f/b>) for page up/down
+        },
+      }
     end,
   },
   -- NOTE: Plugins can also be configured to run Lua code when they are loaded.
@@ -506,15 +547,6 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
       vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
       vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
-
-      -- Slightly advanced example of overriding default behavior and theme
-      vim.keymap.set('n', '<leader>/', function()
-        -- You can pass additional configuration to Telescope to change the theme, layout, etc.
-        builtin.current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
-          winblend = 10,
-          previewer = false,
-        })
-      end, { desc = '[/] Fuzzily search in current buffer' })
 
       -- It's also possible to pass additional configuration options.
       --  See `:help telescope.builtin.live_grep()` for information about particular keys
@@ -798,7 +830,7 @@ require('lazy').setup({
         zls = {
           cmd = { 'zls' },
           settings = {
-            zig_exe_path = vim.fn.expand '~/.zvm/bin/zig',
+            zig_exe_path = 'zig',
           },
         },
         pyright = {
@@ -1081,7 +1113,28 @@ require('lazy').setup({
         terminalColors = true, -- define vim.g.terminal_color_{0,17}
         colors = { -- add/modify theme and palette colors
           palette = {},
-          theme = { zen = {}, pearl = {}, ink = {}, all = {} },
+          theme = {
+            zen = {},
+            pearl = {
+              ui = {
+                fg = "#1a1a22",  -- darker base text
+              },
+              syn = {
+                string     = "#2d7a1e",  -- rich saturated green
+                identifier = "#6b2dad",  -- vivid violet
+                fun        = "#1a5fc2",  -- saturated blue
+                keyword    = "#7820a8",  -- vivid purple
+                statement  = "#6b2dad",  -- vivid violet
+                constant   = "#c45000",  -- saturated orange
+                number     = "#c22070",  -- saturated pink
+                type       = "#0a8080",  -- saturated teal
+                comment    = "#606058",  -- gray (keep muted)
+                operator   = "#3a3a38",  -- dark gray
+              },
+            },
+            ink = {},
+            all = {}
+          },
         },
         overrides = function(colors) -- add/modify highlights
           return {}
@@ -1214,53 +1267,6 @@ require('lazy').setup({
     },
   },
 })
-
--- NOTE: Claude Code Plugin Config
-require('claude-code').setup {
-  -- Terminal window settings
-  window = {
-    split_ratio = 0.3, -- Percentage of screen for the terminal window (height for horizontal, width for vertical splits)
-    position = 'vertical', -- Position of the window: "botright", "topleft", "vertical", "rightbelow vsplit", etc.
-    enter_insert = true, -- Whether to enter insert mode when opening Claude Code
-    hide_numbers = true, -- Hide line numbers in the terminal window
-    hide_signcolumn = true, -- Hide the sign column in the terminal window
-  },
-  -- File refresh settings
-  refresh = {
-    enable = true, -- Enable file change detection
-    updatetime = 100, -- updatetime when Claude Code is active (milliseconds)
-    timer_interval = 1000, -- How often to check for file changes (milliseconds)
-    show_notifications = true, -- Show notification when files are reloaded
-  },
-  -- Git project settings
-  git = {
-    use_git_root = true, -- Set CWD to git root when opening Claude Code (if in git project)
-  },
-  -- Command settings
-  command = 'claude', -- Command used to launch Claude Code
-  -- Command variants
-  command_variants = {
-    -- Conversation management
-    continue = '--continue', -- Resume the most recent conversation
-    resume = '--resume', -- Display an interactive conversation picker
-
-    -- Output options
-    verbose = '--verbose', -- Enable verbose logging with full turn-by-turn output
-  },
-  -- Keymaps
-  keymaps = {
-    toggle = {
-      normal = '<C-,>', -- Normal mode keymap for toggling Claude Code, false to disable
-      terminal = '<C-,>', -- Terminal mode keymap for toggling Claude Code, false to disable
-      variants = {
-        continue = '<leader>cC', -- Normal mode keymap for Claude Code with continue flag
-        verbose = '<leader>cV', -- Normal mode keymap for Claude Code with verbose flag
-      },
-    },
-    window_navigation = true, -- Enable window navigation keymaps (<C-h/j/k/l>)
-    scrolling = true, -- Enable scrolling keymaps (<C-f/b>) for page up/down
-  },
-}
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
