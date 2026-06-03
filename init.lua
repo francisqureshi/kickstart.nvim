@@ -1145,7 +1145,15 @@ require('lazy').setup({
           theme = { zen = {}, pearl = {}, ink = {}, all = {} },
         },
         overrides = function(colors) -- add/modify highlights
-          return {}
+          local theme = colors.theme
+          return {
+            -- kanso ships SnacksIndent/Scope with fg == bg in zen (invisible —
+            -- guide color equals the background). Override with visible theme
+            -- colors. Set here so it re-applies on every `colorscheme kanso`,
+            -- including the zen/pearl light-dark flip — no autocmd race.
+            SnacksIndent = { fg = theme.ui.nontext },
+            SnacksIndentScope = { fg = colors.palette.springViolet1 },
+          }
         end,
         theme = 'zen', -- Load "zen" theme
         background = { -- map the value of 'background' option to a theme
