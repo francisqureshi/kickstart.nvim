@@ -14,13 +14,13 @@ return {
     },
   },
   opts = {
-    -- hide_following_blank_lines = true,
-    -- foldtext = function(folded_count)
-    --   return '(' .. folded_count .. ' comments)'
-    -- end,
+    foldtext = function()
+      return '' -- blank line; the '…' marker lives in the gutter instead
+    end,
   },
   config = function(_, opts)
-    vim.opt.fillchars:append { fold = ' ' } -- no trailing dots on folded comments
+    vim.opt.foldminlines = 0 -- allow folding single-line comments
+    vim.opt.fillchars:append { fold = ' ', foldclose = '…' } -- no dots; '…' shows in gutter
     vim.api.nvim_set_hl(0, 'Folded', { link = 'Comment' }) -- no line highlight, just dim it
     require('commentless').setup(opts)
   end,

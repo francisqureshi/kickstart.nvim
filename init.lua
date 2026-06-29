@@ -1146,7 +1146,7 @@ require('lazy').setup({
         },
         overrides = function(colors) -- add/modify highlights
           local theme = colors.theme
-          return {
+          local o = {
             -- kanso ships SnacksIndent/Scope with fg == bg in zen (invisible —
             -- guide color equals the background). Override with visible theme
             -- colors. Set here so it re-applies on every `colorscheme kanso`,
@@ -1154,6 +1154,12 @@ require('lazy').setup({
             SnacksIndent = { fg = theme.ui.nontext },
             SnacksIndentScope = { fg = colors.palette.springViolet1 },
           }
+          -- Darken the current-line bg toward zen's bg (#090e13). Default
+          -- #24262d reads too bright. Dark only — leave pearl (light) alone.
+          if vim.o.background == 'dark' then
+            o.CursorLine = { bg = '#12161d' }
+          end
+          return o
         end,
         theme = 'zen', -- Load "zen" theme
         background = { -- map the value of 'background' option to a theme

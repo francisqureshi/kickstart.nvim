@@ -6,6 +6,11 @@ return {
     ---@type snacks.Config
     opts = {
       indent = { enabled = true },
+      statuscolumn = {
+        enabled = true, -- gutter fold marker (fillchars.foldclose)
+        left = { 'mark', 'sign', 'fold' }, -- fold left of line number
+        right = { 'git' },
+      },
     },
     -- Indent guide colors (SnacksIndent / SnacksIndentScope) are set in the
     -- kanso `overrides` in init.lua — kanso defaults them to fg == bg (invisible)
