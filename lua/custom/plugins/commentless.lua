@@ -19,4 +19,9 @@ return {
     --   return '(' .. folded_count .. ' comments)'
     -- end,
   },
+  config = function(_, opts)
+    vim.opt.fillchars:append { fold = ' ' } -- no trailing dots on folded comments
+    vim.api.nvim_set_hl(0, 'Folded', { link = 'Comment' }) -- no line highlight, just dim it
+    require('commentless').setup(opts)
+  end,
 }
