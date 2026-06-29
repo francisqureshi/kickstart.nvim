@@ -9,6 +9,9 @@ return {
   lazy = false,
   config = function()
     require('llm-tour').setup {
+      -- Kokoro voice (sherpa-onnx) — far more natural than piper. Needs the
+      -- model bundle: run voices/get-kokoro.sh once. Voice via KOKORO_SID.
+      synth = dir .. '/bin/kokoro-say.sh',
       -- Stream narration to the Mac over the reverse SSH tunnel (ssh -R 7777).
       -- Drop this line to play locally instead (afplay/pw-play, auto by OS).
       play = dir .. '/bin/play-ssh.sh',
