@@ -8,8 +8,8 @@ return {
       indent = { enabled = true },
       statuscolumn = {
         enabled = true, -- gutter fold marker (fillchars.foldclose)
-        left = { 'mark', 'sign', 'fold' }, -- fold left of line number
-        right = { 'git' },
+        left = { 'mark', 'sign', 'git', 'fold' }, -- all left of line number
+        right = {},
       },
     },
     -- Indent guide colors (SnacksIndent / SnacksIndentScope) are set in the
