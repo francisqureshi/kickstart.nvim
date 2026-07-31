@@ -1142,7 +1142,28 @@ require('lazy').setup({
         terminalColors = true, -- define vim.g.terminal_color_{0,17}
         colors = { -- add/modify theme and palette colors
           palette = {},
-          theme = { zen = {}, pearl = {}, ink = {}, all = {} },
+          theme = {
+            zen = {},
+            pearl = {
+              ui = {
+                fg = "#1a1a22",  -- darker base text
+              },
+              syn = {
+                string     = "#2d7a1e",  -- rich saturated green
+                identifier = "#6b2dad",  -- vivid violet
+                fun        = "#1a5fc2",  -- saturated blue
+                keyword    = "#7820a8",  -- vivid purple
+                statement  = "#6b2dad",  -- vivid violet
+                constant   = "#c45000",  -- saturated orange
+                number     = "#c22070",  -- saturated pink
+                type       = "#0a8080",  -- saturated teal
+                comment    = "#606058",  -- gray (keep muted)
+                operator   = "#3a3a38",  -- dark gray
+              },
+            },
+            ink = {},
+            all = {},
+          },
         },
         overrides = function(colors) -- add/modify highlights
           local theme = colors.theme
