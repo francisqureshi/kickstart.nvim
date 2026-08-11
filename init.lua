@@ -1179,6 +1179,13 @@ require('lazy').setup({
           -- #24262d reads too bright. Dark only — leave pearl (light) alone.
           if vim.o.background == 'dark' then
             o.CursorLine = { bg = '#12161d' }
+            -- Kanso's default Zen cursor is white, which is too stark for a
+            -- continuously-visible block cursor. Keep it distinct but muted.
+            o.Cursor = { fg = theme.ui.bg, bg = colors.palette.inkGray1 }
+          else
+            -- Kanso Pearl's default cursor background is its page background,
+            -- making a Cursor-backed terminal cursor disappear.
+            o.Cursor = { fg = theme.ui.bg, bg = colors.palette.pearlInk0 }
           end
           return o
         end,
@@ -1204,6 +1211,12 @@ require('lazy').setup({
       -- via OSC 11 on startup and via DEC mode 2031 on mid-session theme flips,
       -- so this colorscheme will follow macOS light/dark automatically.
       vim.cmd.colorscheme 'kanso'
+
+      -- Neovim 0.12's default `guicursor` uses the terminal's cursor colours
+      -- in normal mode. Associate each editing cursor shape with Kanso's
+      -- Cursor highlight so the glyph remains readable over SSH as well.
+      vim.opt.guicursor =
+        'n-v-c-sm:block-Cursor/lCursor,i-ci-ve:ver25-Cursor/lCursor,r-cr-o:hor20-Cursor/lCursor,t:block-TermCursor'
 
       -- Re-apply the colorscheme when &background changes so the kanso variant
       -- swaps (zen↔pearl) instead of just inverting the existing palette.
