@@ -399,8 +399,8 @@ require('lazy').setup({
         -- Keymaps
         keymaps = {
           toggle = {
-            normal = false, -- Ctrl-, is reserved for the Narrator sidebar
-            terminal = false, -- Ctrl-, is reserved for the Narrator sidebar
+            normal = '<C-,>', -- Normal mode keymap for toggling Claude Code, false to disable
+            terminal = '<C-,>', -- Terminal mode keymap for toggling Claude Code, false to disable
             variants = {
               continue = '<leader>cC', -- Normal mode keymap for Claude Code with continue flag
               verbose = '<leader>cV', -- Normal mode keymap for Claude Code with verbose flag

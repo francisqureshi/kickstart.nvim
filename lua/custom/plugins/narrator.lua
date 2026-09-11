@@ -1,1 +1,0 @@
-/Users/fq/Projects/narrator/nvim/lazy-spec.lua
