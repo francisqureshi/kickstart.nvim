@@ -254,28 +254,10 @@ map('n', '<leader>tt', function()
   end
 end, { desc = 'Jump to last terminal buffer' })
 
--- Zig debug print variable
-map('n', '<leader>pf', function()
-  -- Get the word under cursor
-  local word = vim.fn.expand '<cword>'
-
-  -- Get current line number
-  local line = vim.fn.line '.'
-
-  -- Get current indentation
-  local indent = vim.fn.indent(line)
-  local indent_str = string.rep(' ', indent)
-
-  -- Create the debug print line
-  local debug_line = indent_str .. 'std.debug.print("' .. word .. ': {}\\n", .{' .. word .. '});'
-
-  -- Insert line below and position cursor
-  vim.fn.append(line, debug_line)
-
-  -- Move cursor to the inserted line, at the position after the opening quote
-  vim.fn.cursor(line + 1, indent + 19 + #word)
-  vim.cmd 'startinsert'
-end, { desc = 'Zig debug print variable' })
+-- Accept :Q as a typo for :q (including :Q!).
+vim.api.nvim_create_user_command('Q', function(opts)
+  vim.cmd('quit' .. (opts.bang and '!' or ''))
+end, { bang = true, desc = 'Quit (alias for :q)' })
 
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
@@ -359,58 +341,6 @@ require('lazy').setup({
         changedelete = { text = '~' },
       },
     },
-  },
-  -- NOTE: CLaude code  Plugin
-
-  {
-    'greggh/claude-code.nvim',
-    dependencies = {
-      'nvim-lua/plenary.nvim', -- Required for git operations
-    },
-    config = function()
-      require('claude-code').setup {
-        -- Terminal window settings
-        window = {
-          split_ratio = 0.3, -- Percentage of screen for the terminal window (height for horizontal, width for vertical splits)
-          position = 'vertical', -- Position of the window: "botright", "topleft", "vertical", "rightbelow vsplit", etc.
-          enter_insert = true, -- Whether to enter insert mode when opening Claude Code
-          hide_numbers = true, -- Hide line numbers in the terminal window
-          hide_signcolumn = true, -- Hide the sign column in the terminal window
-        },
-        -- File refresh settings
-        refresh = {
-          enable = true, -- Enable file change detection
-          updatetime = 100, -- updatetime when Claude Code is active (milliseconds)
-          timer_interval = 1000, -- How often to check for file changes (milliseconds)
-          show_notifications = true, -- Show notification when files are reloaded
-        },
-        -- Git project settings
-        git = {
-          use_git_root = true, -- Set CWD to git root when opening Claude Code (if in git project)
-        },
-        -- Command settings
-        command = 'claude', -- Command used to launch Claude Code
-        -- Command variants
-        command_variants = {
-          continue = '--continue', -- Resume the most recent conversation
-          resume = '--resume', -- Display an interactive conversation picker
-          verbose = '--verbose', -- Enable verbose logging with full turn-by-turn output
-        },
-        -- Keymaps
-        keymaps = {
-          toggle = {
-            normal = '<C-,>', -- Normal mode keymap for toggling Claude Code, false to disable
-            terminal = '<C-,>', -- Terminal mode keymap for toggling Claude Code, false to disable
-            variants = {
-              continue = '<leader>cC', -- Normal mode keymap for Claude Code with continue flag
-              verbose = '<leader>cV', -- Normal mode keymap for Claude Code with verbose flag
-            },
-          },
-          window_navigation = false,
-          scrolling = true, -- Enable scrolling keymaps (<C-f/b>) for page up/down
-        },
-      }
-    end,
   },
   -- NOTE: Plugins can also be configured to run Lua code when they are loaded.
   --
@@ -850,9 +780,6 @@ require('lazy').setup({
         jsonls = {},
         zls = {
           cmd = { 'zls' },
-          settings = {
-            zig_exe_path = '/etc/profiles/per-user/fq/bin/zig',
-          },
         },
         pyright = {
           cmd = { 'pyright-langserver', '--stdio' },
