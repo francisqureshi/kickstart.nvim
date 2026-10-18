@@ -1109,10 +1109,26 @@ require('lazy').setup({
             -- Kanso's default Zen cursor is white, which is too stark for a
             -- continuously-visible block cursor. Keep it distinct but muted.
             o.Cursor = { fg = theme.ui.bg, bg = colors.palette.inkGray1 }
+
+            -- Lift Dropbar's menu surface slightly above Zen's dark canvas.
+            o.DropBarMenuNormalFloat = { fg = theme.ui.fg, bg = theme.ui.bg_p1 }
+            o.DropBarMenuFloatBorder = {
+              fg = theme.ui.float.fg_border,
+              bg = theme.ui.bg_p1,
+            }
           else
             -- Kanso Pearl's default cursor background is its page background,
             -- making a Cursor-backed terminal cursor disappear.
             o.Cursor = { fg = theme.ui.bg, bg = colors.palette.pearlInk0 }
+
+            -- Keep Dropbar menus distinct from Pearl's page, but lighter and
+            -- subtler than the default bg_p1 surface.
+            local menu_bg = '#e9e8e6'
+            o.DropBarMenuNormalFloat = { fg = theme.ui.fg, bg = menu_bg }
+            o.DropBarMenuFloatBorder = {
+              fg = theme.ui.float.fg_border,
+              bg = menu_bg,
+            }
           end
           return o
         end,
