@@ -1098,19 +1098,19 @@ require('lazy').setup({
             -- kanso ships SnacksIndent/Scope with fg == bg in zen (invisible —
             -- guide color equals the background). Override with visible theme
             -- colors. Set here so it re-applies on every `colorscheme kanso`,
-            -- including the zen/pearl light-dark flip — no autocmd race.
+            -- including the ink/pearl light-dark flip — no autocmd race.
             SnacksIndent = { fg = theme.ui.nontext },
             SnacksIndentScope = { fg = colors.palette.springViolet1 },
           }
-          -- Darken the current-line bg toward zen's bg (#090e13). Default
-          -- #24262d reads too bright. Dark only — leave pearl (light) alone.
+          -- Keep the custom subdued current-line background in dark mode.
+          -- Leave pearl (light) alone.
           if vim.o.background == 'dark' then
             o.CursorLine = { bg = '#12161d' }
-            -- Kanso's default Zen cursor is white, which is too stark for a
+            -- Kanso's default dark cursor is white, which is too stark for a
             -- continuously-visible block cursor. Keep it distinct but muted.
             o.Cursor = { fg = theme.ui.bg, bg = colors.palette.inkGray1 }
 
-            -- Lift Dropbar's menu surface slightly above Zen's dark canvas.
+            -- Lift Dropbar's menu surface slightly above Ink's dark canvas.
             o.DropBarMenuNormalFloat = { fg = theme.ui.fg, bg = theme.ui.bg_p1 }
             o.DropBarMenuFloatBorder = {
               fg = theme.ui.float.fg_border,
@@ -1132,9 +1132,9 @@ require('lazy').setup({
           end
           return o
         end,
-        theme = 'zen', -- Load "zen" theme
+        theme = 'ink', -- Load "ink" theme
         background = { -- map the value of 'background' option to a theme
-          dark = 'zen', -- try "ink" or "zen"!
+          dark = 'ink',
           light = 'pearl',
         },
         foreground = {
@@ -1149,7 +1149,7 @@ require('lazy').setup({
       -- vim.cmd.colorscheme 'tokyonight-night'
       --
       -- `kanso` (no suffix) reads &background and picks the variant from the
-      -- background map above (dark → zen, light → pearl). Modern terminals
+      -- background map above (dark → ink, light → pearl). Modern terminals
       -- (Ghostty/iTerm2/WezTerm/kitty) — including over SSH — set &background
       -- via OSC 11 on startup and via DEC mode 2031 on mid-session theme flips,
       -- so this colorscheme will follow macOS light/dark automatically.
@@ -1162,7 +1162,7 @@ require('lazy').setup({
         'n-v-c-sm:block-Cursor/lCursor,i-ci-ve:ver25-Cursor/lCursor,r-cr-o:hor20-Cursor/lCursor,t:block-TermCursor'
 
       -- Re-apply the colorscheme when &background changes so the kanso variant
-      -- swaps (zen↔pearl) instead of just inverting the existing palette.
+      -- swaps (ink↔pearl) instead of just inverting the existing palette.
       vim.api.nvim_create_autocmd('OptionSet', {
         pattern = 'background',
         callback = function() vim.cmd.colorscheme 'kanso' end,
