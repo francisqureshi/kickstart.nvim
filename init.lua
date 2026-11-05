@@ -1098,10 +1098,7 @@ require('lazy').setup({
             SnacksIndent = { fg = theme.ui.nontext },
             SnacksIndentScope = { fg = colors.palette.springViolet1 },
           }
-          -- Keep the custom subdued current-line background in dark mode.
-          -- Leave pearl (light) alone.
           if vim.o.background == 'dark' then
-            o.CursorLine = { bg = '#12161d' }
             -- Kanso's default dark cursor is white, which is too stark for a
             -- continuously-visible block cursor. Keep it distinct but muted.
             o.Cursor = { fg = theme.ui.bg, bg = colors.palette.inkGray1 }
@@ -1113,6 +1110,9 @@ require('lazy').setup({
               bg = theme.ui.bg_p1,
             }
           else
+            o.CursorLine = { bg = '#e0e6f1' }
+            o.Visual = { bg = '#bdcee9' }
+
             -- Kanso Pearl's default cursor background is its page background,
             -- making a Cursor-backed terminal cursor disappear.
             o.Cursor = { fg = theme.ui.bg, bg = colors.palette.pearlInk0 }
